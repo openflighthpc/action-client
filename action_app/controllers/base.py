@@ -41,8 +41,9 @@ def add_command(cmd):
     runner.__name__ = cmd.id
     ex(
         help=cmd.summary,
+        description=cmd.description,
         arguments = [
-            (['name'], {})
+            (['name'], dict(help='The name of the node (or group)'))
         ]
     )(runner)
     setattr(Base, cmd.id, runner)
