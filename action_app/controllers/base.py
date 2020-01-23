@@ -26,19 +26,24 @@ class Base(Controller):
             ### add a version banner
             ( [ '-v', '--version' ],
               { 'action'  : 'version',
-                'version' : VERSION_BANNER } ),
+                'version' : VERSION_BANNER } )
         ]
 
 
 def add_command(cmd):
     def runner(self):
         data = {
-            'foo': cmd.id
+            'command':  cmd.id,
+            'name':     self.app.pargs.name
         }
+
         self.app.render(data, 'command1.jinja2')
     runner.__name__ = cmd.id
     ex(
-        help=cmd.summary
+        help=cmd.summary,
+        arguments = [
+            (['name'], {})
+        ]
     )(runner)
     setattr(Base, cmd.id, runner)
 
