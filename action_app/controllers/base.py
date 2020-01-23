@@ -3,11 +3,13 @@ from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
+from jsonapi_client import Session
+from action_app.records import Schema
+
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
 """ % (get_version(), get_version_banner())
-
 
 class Base(Controller):
     class Meta:
@@ -28,33 +30,20 @@ class Base(Controller):
         ]
 
 
-    def _default(self):
-        """Default action if no sub-command is passed."""
-
-        self.app.args.print_help()
-
-
-    @ex(
-        help='example sub command1',
-
-        # sub-command level arguments. ex: 'action_app command1 --foo bar'
-        arguments=[
-            ### add a sample foo option under subcommand namespace
-            ( [ '-f', '--foo' ],
-              { 'help' : 'notorious foo option',
-                'action'  : 'store',
-                'dest' : 'foo' } ),
-        ],
-    )
-    def command1(self):
-        """Example sub-command."""
-
+def add_command(cmd):
+    def runner(self):
         data = {
-            'foo' : 'bar',
+            'foo': cmd.id
         }
-
-        ### do something with arguments
-        if self.app.pargs.foo is not None:
-            data['foo'] = self.app.pargs.foo
-
         self.app.render(data, 'command1.jinja2')
+    runner.__name__ = cmd.id
+    ex(
+        help=cmd.summary
+    )(runner)
+    setattr(Base, cmd.id, runner)
+
+kwargs = { 'headers': { 'Accept': 'application/vnd.api+json' } }
+with Session('http://127.0.0.1:6304', request_kwargs=kwargs) as s:
+    cmds = s.get('commands').resources
+    for c in cmds: add_command(c)
+
