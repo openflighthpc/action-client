@@ -19,7 +19,7 @@ class Base(Controller):
         description = 'Run a command on a node or over a group'
 
         # text displayed at the bottom of --help output
-        epilog = 'Usage: action_app command1 --foo bar'
+        epilog = 'Usage: flight-action <command> [--group] <name>'
 
         # controller level arguments. ex: 'action_app --version'
         arguments = [
