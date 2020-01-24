@@ -4,16 +4,16 @@ from cement.core.exc import CaughtSignal
 from .core.exc import ActionAppError
 from .controllers.base import Base
 
-# configuration defaults
-CONFIG = init_defaults('action_app')
-CONFIG['action_app']['foo'] = 'bar'
+# Configuration Defaults
+CONFIG = init_defaults('flight_action')
+# CONFIG['flight_action']['foo'] = 'bar'
 
 
 class ActionApp(App):
     """Action Client primary application."""
 
     class Meta:
-        label = 'action_app'
+        label = 'flight-action'
 
         # configuration defaults
         config_defaults = CONFIG
@@ -32,7 +32,7 @@ class ActionApp(App):
         config_handler = 'yaml'
 
         # configuration file suffix
-        config_file_suffix = '.yml'
+        config_file_suffix = '.yaml'
 
         # set the log handler
         log_handler = 'colorlog'
