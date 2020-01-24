@@ -30,10 +30,13 @@ class Base(Controller):
 
     def add_command(cmd):
         def runner(self):
+            # Selects the type: nodes or groups
+            type = 'groups' if self.app.pargs.group else 'nodes'
+
             # Build the Ticket Resource
             ticket = self.app.session.create('tickets')
             ticket.command = cmd.id
-            ticket.context = ResourceTuple(self.app.pargs.name, 'nodes')
+            ticket.context = ResourceTuple(self.app.pargs.name, type)
 
             # Manually make the requests and parse the included data
             url = ticket.post_url
@@ -51,6 +54,8 @@ class Base(Controller):
             help=cmd.summary,
             description=cmd.description,
             arguments = [
+                (['-g', '--group'], { 'action': 'store_true',
+                    'help': "Run over the group given by 'name'" }),
                 (['name'], dict(help='The name of the node (or group)'))
             ]
         )(runner)
