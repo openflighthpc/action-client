@@ -3,9 +3,6 @@ from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
-from jsonapi_client import Session
-from action_app.records import Schema
-
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
@@ -29,27 +26,21 @@ class Base(Controller):
                 'version' : VERSION_BANNER } )
         ]
 
+    def add_command(cmd):
+        def runner(self):
+            data = {
+                'command':  cmd.id,
+                'name':     self.app.pargs.name
+            }
 
-def add_command(cmd):
-    def runner(self):
-        data = {
-            'command':  cmd.id,
-            'name':     self.app.pargs.name
-        }
-
-        self.app.render(data, 'command1.jinja2')
-    runner.__name__ = cmd.id
-    ex(
-        help=cmd.summary,
-        description=cmd.description,
-        arguments = [
-            (['name'], dict(help='The name of the node (or group)'))
-        ]
-    )(runner)
-    setattr(Base, cmd.id, runner)
-
-kwargs = { 'headers': { 'Accept': 'application/vnd.api+json' } }
-with Session('http://127.0.0.1:6304', request_kwargs=kwargs) as s:
-    cmds = s.get('commands').resources
-    for c in cmds: add_command(c)
+            self.app.render(data, 'command1.jinja2')
+        runner.__name__ = cmd.id
+        ex(
+            help=cmd.summary,
+            description=cmd.description,
+            arguments = [
+                (['name'], dict(help='The name of the node (or group)'))
+            ]
+        )(runner)
+        setattr(Base, cmd.id, runner)
 
