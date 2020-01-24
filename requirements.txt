@@ -3,3 +3,5 @@ jinja2
 pyyaml
 colorlog
 jsonapi-client
+
+pystache

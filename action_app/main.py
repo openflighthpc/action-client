@@ -9,7 +9,26 @@ from jsonapi_client import Session
 Schema = {
     'commands': { 'properties': {
         'summary': { 'type': 'string' },
-        'description': { 'type': 'string' }
+        'description': { 'type': 'string' },
+        'name': { 'type': 'string' }
+    }},
+    'nodes': { 'properties': {
+        'name': { 'type': 'string' }
+    }},
+    'groups': { 'properties': {
+        'name': { 'type': 'string' }
+    }},
+    'tickets': { 'properties': {
+        'true': {},
+        'jobs': { 'relation': 'to-many', 'resource': ['jobs'] },
+        'context': { 'relation': 'to-one', 'resource': ['nodes', 'groups'] },
+        'command': { 'relation': 'to-one', 'resource': ['commands'] }
+    }},
+    'jobs': { 'properties': {
+        'stdout': { 'type': 'string' },
+        'stderr': { 'type': 'string' },
+        'status': { 'type': 'integer' },
+        'node': { 'relation': 'to-one', 'resource': ['nodes'] }
     }}
 }
 
@@ -22,10 +41,13 @@ class ActionApp(App):
     """Action Client primary application."""
 
     class Meta:
-        label = 'flight-action'
+        label = 'action_app'
 
         # configuration defaults
         config_defaults = CONFIG
+
+        # look for configs under the user facing key
+        config_section = 'flight-action'
 
         # call sys.exit() on close
         exit_on_close = True
@@ -34,7 +56,7 @@ class ActionApp(App):
         extensions = [
             'yaml',
             'colorlog',
-            'jinja2',
+            'mustache'
         ]
 
         # configuration handler
@@ -47,7 +69,7 @@ class ActionApp(App):
         log_handler = 'colorlog'
 
         # set the output handler
-        output_handler = 'jinja2'
+        output_handler = 'mustache'
 
         # register handlers
         handlers = [
@@ -59,8 +81,7 @@ class ActionApp(App):
         self.session = None
 
     def open_session(self):
-        kwargs = { 'headers': { 'Accept': 'application/vnd.api+json' } }
-        self.session = Session('http://127.0.0.1:6304', request_kwargs=kwargs)
+        self.session = Session('http://127.0.0.1:6304', schema=Schema)
 
     def close_session(self):
         self.session.close()

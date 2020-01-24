@@ -3,6 +3,8 @@ from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
+from jsonapi_client import ResourceTuple, Inclusion
+
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
@@ -28,12 +30,22 @@ class Base(Controller):
 
     def add_command(cmd):
         def runner(self):
-            data = {
-                'command':  cmd.id,
-                'name':     self.app.pargs.name
-            }
+            # Build the Ticket Resource
+            ticket = self.app.session.create('tickets')
+            ticket.command = cmd.id
+            ticket.context = ResourceTuple(self.app.pargs.name, 'nodes')
 
-            self.app.render(data, 'command1.jinja2')
+            # Manually make the requests and parse the included data
+            url = ticket.post_url
+            payload = { 'data': ticket.json }
+            data = self.app.session.http_request('POST', url, payload)[1]
+
+            # Reassign the ticket from the response
+            ticket = self.app.session.read(data).resource
+
+            # Render the jobs to the screen
+            for j in ticket.jobs: self.app.render(j, 'job.mustache')
+
         runner.__name__ = cmd.id
         ex(
             help=cmd.summary,
