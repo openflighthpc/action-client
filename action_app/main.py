@@ -134,11 +134,8 @@ def main():
                 traceback.print_exc()
 
         except DocumentError as e:
-            if e.errors['status_code'] == 403:
-                print(e.response.json()['errors'][0]['detail'])
-                app.exit_code = 1
-            else:
-                raise e
+            print(e.response.json()['errors'][0]['detail'])
+            app.exit_code = 1
 
         except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
