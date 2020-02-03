@@ -7,6 +7,8 @@ from .controllers.base import Base
 from jsonapi_client import Session
 from jsonapi_client.exceptions import DocumentError
 
+from requests.auth import AuthBase
+
 Schema = {
     'commands': { 'properties': {
         'summary': { 'type': 'string' },
@@ -33,22 +35,33 @@ Schema = {
     }}
 }
 
-# Configuration Defaults
-CONFIG = init_defaults('flight_action')
-# CONFIG['flight_action']['foo'] = 'bar'
+class BearerAuth(AuthBase):
+    def __init__(self, token):
+        self.token = token
 
+    def __call__(self, req):
+        req.headers['Authorization'] = 'Bearer ' + self.token
+        return req
+
+# Configuration Defaults
+CONFIG = init_defaults('flight_action', 'log.logging')
+CONFIG['flight_action']['base_url'] = 'http://localhost:6304'
+CONFIG['flight_action']['jwt_token'] = ''
+CONFIG['log.logging']['level'] = 'info'
 
 class ActionApp(App):
     """Action Client primary application."""
 
     class Meta:
-        label = 'action_app'
+        # Defines the config paths of the label (among other things)
+        label = 'flight-action'
+
+        # look for configs under the user facing key
+        config_section = 'flight_action'
 
         # configuration defaults
         config_defaults = CONFIG
 
-        # look for configs under the user facing key
-        config_section = 'flight-action'
 
         # call sys.exit() on close
         exit_on_close = True
@@ -82,7 +95,10 @@ class ActionApp(App):
         self.session = None
 
     def open_session(self):
-        self.session = Session('http://127.0.0.1:6304', schema=Schema)
+        self.session = Session(
+                self.config.get('flight_action', 'base_url'),
+                schema=Schema,
+                request_kwargs={ 'auth': BearerAuth(self.config.get('flight_action', 'jwt_token')) })
 
     def close_session(self):
         self.session.close()
@@ -99,7 +115,7 @@ class ActionApp(App):
     # *. argparser than runs the action [and assumable uses the session]
     # 3. the session is closed
     Meta.hooks = [
-        ('pre_setup', open_session),
+        ('post_setup', open_session),
         ('pre_run', add_commands),
         ('pre_close', close_session)
     ]

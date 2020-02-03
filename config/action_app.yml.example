@@ -1,46 +1,32 @@
-### Action Client Configuration Settings
----
+# =============================================================================
+# This document contains the configuration options for ActionApp
+# It is only intended as a reference, changes to this document will not
+# configure the application.
+#
+# The configs will be loaded from (or overridden by) the following files:
+#   1. /etc/flight-action/flight-action.yaml
+#   2. ~/.config/flight-action/flight-action.yaml
+#   3. ~/.flight-action/config/flight-action.yaml
+#   4. ~/.flight-action.yaml
+# =============================================================================
 
-action_app:
+flight_action:
+  # =============================================================================
+  # App Base Url [REQUIRED]
+  # Specify the location where the API server is being hosted
+  # =============================================================================
+  base_url:
 
-### Toggle application level debug (does not toggle framework debugging)
-# debug: false
+  # =============================================================================
+  # JWT Token [REQUIRED]
+  # Specify your authorization token to be used with the request. Contact your
+  # system administrator to be issued with a token
+  # =============================================================================
+  jwt_token:
 
-### Where external (third-party) plugins are loaded from
-# plugin_dir: /var/lib/action_app/plugins/
+  # =============================================================================
+  # Debugging Mode [Development Purposes Only]
+  # Enable the development tools for debugging purposes
+  # =============================================================================
+  debug:
 
-### Where all plugin configurations are loaded from
-# plugin_config_dir: /etc/action_app/plugins.d/
-
-### Where external templates are loaded from
-# template_dir: /var/lib/action_app/templates/
-
-### The log handler label
-# log_handler: colorlog
-
-### The output handler label
-# output_handler: jinja2
-
-### sample foo option
-# foo: bar
-
-
-log.colorlog:
-
-### Where the log file lives (no log file by default)
-# file: null
-
-### The level for which to log.  One of: info, warning, error, fatal, debug
-# level: info
-
-### Whether or not to log to console
-# to_console: true
-
-### Whether or not to rotate the log file when it reaches `max_bytes`
-# rotate: false
-
-### Max size in bytes that a log file can grow until it is rotated.
-# max_bytes: 512000
-
-### The maximun number of log files to maintain when rotating
-# max_files: 4
