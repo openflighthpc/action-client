@@ -10,6 +10,7 @@ from jsonapi_client import Session
 from jsonapi_client.exceptions import DocumentError
 
 from requests.auth import AuthBase
+from requests.exceptions import ConnectionError
 
 Schema = {
     'commands': { 'properties': {
@@ -156,6 +157,10 @@ def main():
 
         except DocumentError as e:
             print(e.response.json()['errors'][0]['detail'])
+            app.exit_code = 1
+
+        except ConnectionError:
+            print('Could not connect to the upstream service')
             app.exit_code = 1
 
         except CaughtSignal as e:
