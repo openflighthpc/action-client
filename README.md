@@ -59,6 +59,20 @@ $ make dist-upload
 
 Refer to [reference config](config/action_app.yaml.example) on how to configure the application.
 
+## Usage
+
+There is no specific usage for the `action_app` as all the commands are generated from the upstream service. These commands will automatically be added once the service's URL and access token has been configured. In general a command can be ran for a single node using:
+
+```
+env/bin/action_app <command-name> <node-name>
+```
+
+It is also possible to run it over a group of nodes using the `--group` flag. Refer to the upstream documentation for valid group syntax.
+
+```
+env/bin/action_app <command-name> --group <group-name-syntax>
+```
+
 ## Deployments
 
 ### Docker
