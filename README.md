@@ -55,6 +55,10 @@ $ make dist
 $ make dist-upload
 ```
 
+## Configuration
+
+Refer to [reference config](config/action_app.yaml.example) on how to configure the application.
+
 ## Deployments
 
 ### Docker
