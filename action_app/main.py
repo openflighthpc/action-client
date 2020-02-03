@@ -4,6 +4,8 @@ from cement.core.exc import CaughtSignal
 from .core.exc import ActionAppError
 from .controllers.base import Base
 
+from os.path import dirname, join
+
 from jsonapi_client import Session
 from jsonapi_client.exceptions import DocumentError
 
@@ -84,6 +86,9 @@ class ActionApp(App):
 
         # set the output handler
         output_handler = 'mustache'
+
+        # sets the template directory
+        template_dirs = [join(dirname(__file__), 'templates')]
 
         # register handlers
         handlers = [
