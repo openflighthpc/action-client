@@ -5,6 +5,7 @@ from .core.exc import ActionAppError
 from .controllers.base import Base
 
 from jsonapi_client import Session
+from jsonapi_client.exceptions import DocumentError
 
 Schema = {
     'commands': { 'properties': {
@@ -99,7 +100,7 @@ class ActionApp(App):
     # 3. the session is closed
     Meta.hooks = [
         ('pre_setup', open_session),
-        ('post_setup', add_commands),
+        ('pre_run', add_commands),
         ('pre_close', close_session)
     ]
 
@@ -131,6 +132,13 @@ def main():
             if app.debug is True:
                 import traceback
                 traceback.print_exc()
+
+        except DocumentError as e:
+            if e.errors['status_code'] == 403:
+                print(e.response.json()['errors'][0]['detail'])
+                app.exit_code = 1
+            else:
+                raise e
 
         except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
