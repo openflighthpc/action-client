@@ -50,6 +50,6 @@ setup(
     include_package_data=True,
     entry_points="""
         [console_scripts]
-        action_app = action_app.main:main
+        flight-action = action_app.main:main
     """,
 )

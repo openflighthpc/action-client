@@ -64,13 +64,13 @@ Refer to [reference config](config/action_app.yaml.example) on how to configure 
 There is no specific usage for the `action_app` as all the commands are generated from the upstream service. These commands will automatically be added once the service's URL and access token has been configured. In general a command can be ran for a single node using:
 
 ```
-env/bin/action_app <command-name> <node-name>
+flight-action <command-name> <node-name>
 ```
 
 It is also possible to run it over a group of nodes using the `--group` flag. Refer to the upstream documentation for valid group syntax.
 
 ```
-env/bin/action_app <command-name> --group <group-name-syntax>
+flight-action <command-name> --group <group-name-syntax>
 ```
 
 ## Deployments
