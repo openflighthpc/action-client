@@ -1,6 +1,7 @@
 -r requirements.txt
 
 ipython
+pollute
 pytest
 pytest-cov
 coverage

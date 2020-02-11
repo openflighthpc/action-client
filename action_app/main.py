@@ -122,8 +122,8 @@ class ActionApp(App):
             Base
         ]
 
-    def __init__(self):
-        App.__init__(self)
+    def __init__(self, *arg, **kwarg):
+        App.__init__(self, *arg, **kwarg)
         self.session = None
 
     def open_session(self):
