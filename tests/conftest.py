@@ -42,3 +42,9 @@ def run_app(*argv):
 
     return _run_app
 
+@pytest.fixture(scope='module')
+def vcr_config():
+    return {
+        "filter_headers": [('authorization', 'REDACTED')],
+    }
+

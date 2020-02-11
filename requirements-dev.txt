@@ -4,6 +4,7 @@ ipython
 pollute
 pytest
 pytest-cov
+pytest-vcr
 coverage
 twine>=1.11.0
 setuptools>=38.6.0

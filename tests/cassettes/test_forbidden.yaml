@@ -1,0 +1,31 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - REDACTED
+    method: GET
+    uri: http://localhost:6304/commands
+  response:
+    body:
+      string: "{\n  \"errors\": [\n    {\n      \"id\": \"c7b5e37d-64f2-4dbd-87ac-491ed8993358\"\
+        ,\n      \"title\": \"Forbidden Error\",\n      \"detail\": \"You are not\
+        \ authorized to perform this action\",\n      \"status\": \"403\"\n    }\n\
+        \  ]\n}"
+    headers:
+      Content-Length:
+      - '206'
+      Content-Type:
+      - application/vnd.api+json
+    status:
+      code: 403
+      message: Forbidden
+version: 1

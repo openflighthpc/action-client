@@ -25,12 +25,14 @@
 # https://github.com/openflighthpc/action-client
 #===============================================================================
 
+import pytest
 from pytest import raises
 from action_app.main import ActionAppTest
-from requests.exceptions import ConnectionError
+from jsonapi_client.exceptions import DocumentError
 
-def test_missing_server(run_app):
-    with raises(ConnectionError):
+@pytest.mark.vcr()
+def test_forbidden(run_app):
+    with raises(DocumentError):
         run_app()
 
 # def test_action_app():
