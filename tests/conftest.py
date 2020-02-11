@@ -29,6 +29,7 @@
 PyTest Fixtures.
 """
 
+import yaml
 import pytest
 from cement import fs
 
@@ -39,8 +40,14 @@ def run_app(*argv):
     def _run_app():
         with ActionAppTest(argv=argv) as a:
             a.run()
+            return a
 
     return _run_app
+
+@pytest.fixture(scope='session')
+def commands_yaml():
+    with open('tests/fixtures/commands.yaml') as file:
+        return yaml.load(file, Loader=yaml.FullLoader)
 
 @pytest.fixture(scope='module')
 def vcr_config():
