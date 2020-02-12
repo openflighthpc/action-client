@@ -1,0 +1,106 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - REDACTED
+    method: GET
+    uri: http://localhost:6304/commands
+  response:
+    body:
+      string: "{\n  \"data\": [\n    {\n      \"type\": \"commands\",\n      \"id\"\
+        : \"command1\",\n      \"attributes\": {\n        \"name\": \"command1\",\n\
+        \        \"description\": \"First test command\",\n        \"summary\": \"\
+        First test command\"\n      },\n      \"links\": {\n        \"self\": \"/commands/command1\"\
+        \n      }\n    },\n    {\n      \"type\": \"commands\",\n      \"id\": \"\
+        command2\",\n      \"attributes\": {\n        \"name\": \"command2\",\n  \
+        \      \"description\": \"Second test command\",\n        \"summary\": \"\
+        Second test command\"\n      },\n      \"links\": {\n        \"self\": \"\
+        /commands/command2\"\n      }\n    }\n  ],\n  \"jsonapi\": {\n    \"version\"\
+        : \"1.0\"\n  },\n  \"included\": [\n\n  ]\n}"
+    headers:
+      Content-Length:
+      - '621'
+      Content-Type:
+      - application/vnd.api+json
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"data": {"type": "tickets", "attributes": {}, "relationships": {"context":
+      {"data": {"id": "node1", "type": "nodes"}}, "command": {"data": {"id": "command1",
+      "type": "commands"}}}}}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '182'
+      Content-Type:
+      - application/vnd.api+json
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - REDACTED
+    method: POST
+    uri: http://localhost:6304/tickets
+  response:
+    body:
+      string: "{\n  \"data\": {\n    \"type\": \"tickets\",\n    \"id\": \"b0dbc59f65e10f676e321ad65d3a73b499d06fd0\"\
+        ,\n    \"attributes\": {\n      \"true\": true\n    },\n    \"links\": {\n\
+        \      \"self\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0\"\n \
+        \   },\n    \"relationships\": {\n      \"command\": {\n        \"links\"\
+        : {\n          \"self\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/relationships/command\"\
+        ,\n          \"related\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/command\"\
+        \n        },\n        \"data\": {\n          \"type\": \"commands\",\n   \
+        \       \"id\": \"command1\"\n        }\n      },\n      \"context\": {\n\
+        \        \"links\": {\n          \"self\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/relationships/context\"\
+        ,\n          \"related\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/context\"\
+        \n        },\n        \"data\": {\n          \"type\": \"nodes\",\n      \
+        \    \"id\": \"node1\"\n        }\n      },\n      \"jobs\": {\n        \"\
+        links\": {\n          \"self\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/relationships/jobs\"\
+        ,\n          \"related\": \"/tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0/jobs\"\
+        \n        },\n        \"data\": [\n          {\n            \"type\": \"jobs\"\
+        ,\n            \"id\": \"f9469099c619a9ffae8cd18da5bf285aeb38f53f\"\n    \
+        \      }\n        ]\n      }\n    }\n  },\n  \"jsonapi\": {\n    \"version\"\
+        : \"1.0\"\n  },\n  \"included\": [\n    {\n      \"type\": \"commands\",\n\
+        \      \"id\": \"command1\",\n      \"attributes\": {\n        \"name\": \"\
+        command1\",\n        \"description\": \"First test command\",\n        \"\
+        summary\": \"First test command\"\n      },\n      \"links\": {\n        \"\
+        self\": \"/commands/command1\"\n      }\n    },\n    {\n      \"type\": \"\
+        nodes\",\n      \"id\": \"node1\",\n      \"attributes\": {\n        \"name\"\
+        : \"node1\"\n      },\n      \"links\": {\n        \"self\": \"/nodes/node1\"\
+        \n      }\n    },\n    {\n      \"type\": \"jobs\",\n      \"id\": \"f9469099c619a9ffae8cd18da5bf285aeb38f53f\"\
+        ,\n      \"attributes\": {\n        \"stdout\": \"command 1\\n\",\n      \
+        \  \"stderr\": \"\",\n        \"status\": 0\n      },\n      \"links\": {\n\
+        \        \"self\": \"/jobs/f9469099c619a9ffae8cd18da5bf285aeb38f53f\"\n  \
+        \    },\n      \"relationships\": {\n        \"node\": {\n          \"links\"\
+        : {\n            \"self\": \"/jobs/f9469099c619a9ffae8cd18da5bf285aeb38f53f/relationships/node\"\
+        ,\n            \"related\": \"/jobs/f9469099c619a9ffae8cd18da5bf285aeb38f53f/node\"\
+        \n          },\n          \"data\": {\n            \"type\": \"nodes\",\n\
+        \            \"id\": \"node1\"\n          }\n        },\n        \"ticket\"\
+        : {\n          \"links\": {\n            \"self\": \"/jobs/f9469099c619a9ffae8cd18da5bf285aeb38f53f/relationships/ticket\"\
+        ,\n            \"related\": \"/jobs/f9469099c619a9ffae8cd18da5bf285aeb38f53f/ticket\"\
+        \n          }\n        }\n      }\n    }\n  ]\n}"
+    headers:
+      Content-Length:
+      - '2618'
+      Content-Type:
+      - application/vnd.api+json
+      Location:
+      - /tickets/b0dbc59f65e10f676e321ad65d3a73b499d06fd0
+    status:
+      code: 201
+      message: Created
+version: 1

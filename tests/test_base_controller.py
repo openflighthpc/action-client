@@ -31,6 +31,16 @@ from action_app.controllers.base import Base
 @pytest.mark.vcr
 def test_it_outputs_to_stdout_by_default(run_app):
     app = run_app('command1', 'node1')
-    job, output = app.last_rendered
-    assert output.find(job.stdout)
+    data, output = app.last_rendered
+    assert output.find(data['job'].stdout) != -1
+
+@pytest.mark.vcr
+def test_saving_output_to_a_directory(run_app, tmpdir):
+    stdout_path = tmpdir.join('node1.stdout')
+    app = run_app('command1', 'node1', '-o', str(tmpdir))
+    data, output = app.last_rendered
+    job = data['job']
+    assert output.find(job.stdout) == -1
+    assert stdout_path.check()
+    assert stdout_path.read().find(job.stdout) != -1
 

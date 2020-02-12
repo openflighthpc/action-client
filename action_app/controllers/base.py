@@ -33,6 +33,8 @@ from jsonapi_client import ResourceTuple, Inclusion
 
 from action_app.exceptions import MissingNodesError
 
+import os
+
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
@@ -57,6 +59,21 @@ class Base(Controller):
         ]
 
     def add_command(cmd):
+        def render_job(render, job, directory):
+            # Setup the top level rendering scope
+            data = { 'job': job,
+                     'node': job.node,
+                     'long_format': False if directory else True }
+
+            if directory:
+                if not os.path.exists(directory): os.mkdir(directory)
+                with open(os.path.join(directory, job.node.name + '.stdout'), 'w+') as f:
+                    f.write(job.stdout)
+                with open(os.path.join(directory, job.node.name + '.stderr'), 'w+') as f:
+                    f.write(job.stderr)
+
+            render(data, 'job.mustache')
+
         def runner(self):
             # Selects the type: nodes or groups
             type = 'groups' if self.app.pargs.group else 'nodes'
@@ -82,8 +99,7 @@ class Base(Controller):
                     msg = 'Could not execute the job as the node does not exist'
                 raise MissingNodesError(msg)
 
-            # Render the jobs to the screen
-            for j in ticket.jobs: self.app.render(j, 'job.mustache')
+            for j in ticket.jobs: render_job(self.app.render, j, self.app.pargs.output)
 
         runner.__name__ = cmd.id
         ex(
