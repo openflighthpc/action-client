@@ -36,8 +36,8 @@ from cement import fs
 from action_app.main import ActionAppTest
 
 @pytest.fixture
-def run_app(*argv):
-    def _run_app():
+def run_app():
+    def _run_app(*argv):
         with ActionAppTest(argv=argv) as a:
             a.run()
             return a

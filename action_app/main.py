@@ -38,6 +38,8 @@ from jsonapi_client.exceptions import DocumentError
 from requests.auth import AuthBase
 from requests.exceptions import ConnectionError
 
+from action_app.exceptions import Error
+
 Schema = {
     'commands': { 'properties': {
         'summary': { 'type': 'string' },
@@ -194,6 +196,9 @@ def main():
             print('\n%s' % e)
             app.exit_code = 0
 
+        except Error as e:
+            print(e)
+            app.exit_code = 1
 
 if __name__ == '__main__':
     main()

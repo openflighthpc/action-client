@@ -31,6 +31,8 @@ from ..core.version import get_version
 
 from jsonapi_client import ResourceTuple, Inclusion
 
+from action_app.exceptions import MissingNodesError
+
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
@@ -71,6 +73,14 @@ class Base(Controller):
 
             # Reassign the ticket from the response
             ticket = self.app.session.read(data).resource
+
+            # Error if no jobs where returned
+            if len(ticket.jobs) == 0:
+                if self.app.pargs.group:
+                    msg = 'Could not execute any jobs as the nodes do not exist'
+                else:
+                    msg = 'Could not execute the job as the node does not exist'
+                raise MissingNodesError(msg)
 
             # Render the jobs to the screen
             for j in ticket.jobs: self.app.render(j, 'job.mustache')

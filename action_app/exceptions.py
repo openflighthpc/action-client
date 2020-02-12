@@ -25,31 +25,9 @@
 # https://github.com/openflighthpc/action-client
 #===============================================================================
 
-import vcr
-import pytest
-from pytest import raises
-from action_app.main import ActionAppTest
-from action_app.exceptions import MissingNodesError
-from jsonapi_client.exceptions import DocumentError
+class Error(Exception):
+    pass
 
-@pytest.mark.vcr()
-def test_forbidden(run_app):
-    with raises(DocumentError):
-        run_app()
-
-@pytest.mark.vcr('test/cassettes/commands.yaml')
-def test_adds_commands(run_app, commands_yaml):
-    app = run_app()
-    commands = app.controller._get_exposed_commands()
-    assert list(commands_yaml.keys()) == commands
-
-@pytest.mark.vcr
-def test_missing_node(run_app):
-    with raises(MissingNodesError):
-        run_app('command1', 'missing')
-
-@pytest.mark.vcr
-def test_missing_group(run_app):
-    with raises(MissingNodesError):
-        run_app('command1', '--group', 'missing1,missing2')
+class MissingNodesError(Error):
+    pass
 
