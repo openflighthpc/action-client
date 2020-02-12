@@ -31,3 +31,6 @@ class Error(Exception):
 class MissingNodesError(Error):
     pass
 
+class OutputNotDirectoryError(Error):
+    pass
+

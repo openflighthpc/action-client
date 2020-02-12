@@ -32,6 +32,7 @@ from ..core.version import get_version
 from jsonapi_client import ResourceTuple, Inclusion
 
 from action_app.exceptions import MissingNodesError
+from action_app.exceptions import OutputNotDirectoryError
 
 import os
 
@@ -67,6 +68,8 @@ class Base(Controller):
 
             if directory:
                 if not os.path.exists(directory): os.mkdir(directory)
+                if not os.path.isdir(directory):
+                    raise OutputNotDirectoryError('{} is not a directory'.format(directory))
                 name = job.node.name
                 with open(os.path.join(directory, name + '.status'), 'w+') as f:
                     f.write(str(job.status))
