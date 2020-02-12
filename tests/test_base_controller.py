@@ -25,42 +25,10 @@
 # https://github.com/openflighthpc/action-client
 #===============================================================================
 
-"""
-PyTest Fixtures.
-"""
-
-import yaml
 import pytest
-from cement import fs
+from action_app.controllers.base import Base
 
-from action_app.main import ActionAppTest
-
-@pytest.fixture
-def build_controller():
-    def _build_controller(*argv):
-        app = ActionAppTest(argv=argv)
-        app.setup()
-        return app.controller
-
-    return _build_controller
-
-@pytest.fixture
-def run_app():
-    def _run_app(*argv):
-        with ActionAppTest(argv=argv) as a:
-            a.run()
-            return a
-
-    return _run_app
-
-@pytest.fixture(scope='session')
-def commands_yaml():
-    with open('tests/fixtures/commands.yaml') as file:
-        return yaml.load(file, Loader=yaml.FullLoader)
-
-@pytest.fixture(scope='module')
-def vcr_config():
-    return {
-        "filter_headers": [('authorization', 'REDACTED')],
-    }
+def test_default_node_output_mode(build_controller):
+    controller = build_controller('command1', 'missing')
+    assert controller.output_mode() == 'stdout'
 

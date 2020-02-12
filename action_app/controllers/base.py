@@ -56,6 +56,9 @@ class Base(Controller):
                 'version' : VERSION_BANNER } )
         ]
 
+    def output_mode(self):
+        return 'stdout'
+
     def add_command(cmd):
         def runner(self):
             # Selects the type: nodes or groups
