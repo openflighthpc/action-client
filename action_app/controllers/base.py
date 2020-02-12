@@ -56,9 +56,6 @@ class Base(Controller):
                 'version' : VERSION_BANNER } )
         ]
 
-    def output_directory(self):
-        return None
-
     def add_command(cmd):
         def runner(self):
             # Selects the type: nodes or groups
@@ -95,6 +92,8 @@ class Base(Controller):
             arguments = [
                 (['-g', '--group'], { 'action': 'store_true',
                     'help': "Run over the group given by 'name'" }),
+                (['-o', '--output'], { 'metavar': 'DIRECTORY',
+                    'help': "Save the results within this directory"}),
                 (['name'], dict(help='The name of the node (or group)'))
             ]
         )(runner)

@@ -28,7 +28,9 @@
 import pytest
 from action_app.controllers.base import Base
 
-def test_default_output_directory(build_controller):
-    controller = build_controller('command1', 'missing')
-    assert controller.output_directory() == None
+@pytest.mark.vcr
+def test_it_outputs_to_stdout_by_default(run_app):
+    app = run_app('command1', 'node1')
+    job, output = app.last_rendered
+    assert output.find(job.stdout)
 

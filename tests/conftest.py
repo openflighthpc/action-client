@@ -36,15 +36,6 @@ from cement import fs
 from action_app.main import ActionAppTest
 
 @pytest.fixture
-def build_controller():
-    def _build_controller(*argv):
-        app = ActionAppTest(argv=argv)
-        app.setup()
-        return app.controller
-
-    return _build_controller
-
-@pytest.fixture
 def run_app():
     def _run_app(*argv):
         with ActionAppTest(argv=argv) as a:
