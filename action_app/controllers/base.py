@@ -56,8 +56,8 @@ class Base(Controller):
                 'version' : VERSION_BANNER } )
         ]
 
-    def output_mode(self):
-        return 'stdout'
+    def output_directory(self):
+        return None
 
     def add_command(cmd):
         def runner(self):

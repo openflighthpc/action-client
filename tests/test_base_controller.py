@@ -28,7 +28,7 @@
 import pytest
 from action_app.controllers.base import Base
 
-def test_default_node_output_mode(build_controller):
+def test_default_output_directory(build_controller):
     controller = build_controller('command1', 'missing')
-    assert controller.output_mode() == 'stdout'
+    assert controller.output_directory() == None
 
