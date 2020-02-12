@@ -67,9 +67,12 @@ class Base(Controller):
 
             if directory:
                 if not os.path.exists(directory): os.mkdir(directory)
-                with open(os.path.join(directory, job.node.name + '.stdout'), 'w+') as f:
+                name = job.node.name
+                with open(os.path.join(directory, name + '.status'), 'w+') as f:
+                    f.write(str(job.status))
+                with open(os.path.join(directory, name + '.stdout'), 'w+') as f:
                     f.write(job.stdout)
-                with open(os.path.join(directory, job.node.name + '.stderr'), 'w+') as f:
+                with open(os.path.join(directory, name + '.stderr'), 'w+') as f:
                     f.write(job.stderr)
 
             render(data, 'job.mustache')
