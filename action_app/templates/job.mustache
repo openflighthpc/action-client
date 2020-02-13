@@ -1,9 +1,13 @@
+{{#long_format}}
 
 NODE:   {{ node.name }}
-STATUS: {{ status }}
+STATUS: {{ job.status }}
 STDOUT:
-{{{ stdout }}}
+{{{ job.stdout }}}
 
 STDERR:
-{{{ stderr }}}
-
+{{{ job.stderr }}}
+{{/long_format}}
+{{^long_format}}
+{{ node.name }}: {{ job.status }}
+{{/long_format}}

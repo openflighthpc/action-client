@@ -25,9 +25,30 @@
 # https://github.com/openflighthpc/action-client
 #===============================================================================
 
-from cement.utils.version import get_version as cement_get_version
+import pytest
+from action_app.controllers.base import Base
+from action_app.exceptions import OutputNotDirectoryError
 
-VERSION = (0, 2, 0, 'rc', 0)
+@pytest.mark.vcr
+def test_it_outputs_to_stdout_by_default(run_app):
+    app = run_app('command1', 'node1')
+    data, output = app.last_rendered
+    assert output.find(data['job'].stdout) != -1
 
-def get_version(version=VERSION):
-    return cement_get_version(version)
+@pytest.mark.vcr
+def test_saving_output_to_a_directory(run_app, tmpdir):
+    stdout_path = tmpdir.join('node1.stdout')
+    app = run_app('command1', 'node1', '-o', str(tmpdir))
+    data, output = app.last_rendered
+    job = data['job']
+    assert output.find(job.stdout) == -1
+    assert stdout_path.check()
+    assert stdout_path.read().find(job.stdout) != -1
+
+@pytest.mark.vcr
+def test_error_handling_if_output_is_a_file(run_app, tmpdir):
+    tmpfile = tmpdir.join('file')
+    tmpfile.write('')
+    with pytest.raises(OutputNotDirectoryError):
+        app = run_app('command1', 'node1', '-o', str(tmpfile))
+

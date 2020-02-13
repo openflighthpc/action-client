@@ -1,0 +1,11 @@
+command1:
+  help:
+    summary: First test command
+  default:
+    script: echo 'command 1'
+
+command2:
+  help:
+    summary: Second test command
+  default:
+    script: echo 'command 2'

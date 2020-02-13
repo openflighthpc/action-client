@@ -25,9 +25,12 @@
 # https://github.com/openflighthpc/action-client
 #===============================================================================
 
-from cement.utils.version import get_version as cement_get_version
+class Error(Exception):
+    pass
 
-VERSION = (0, 2, 0, 'rc', 0)
+class MissingNodesError(Error):
+    pass
 
-def get_version(version=VERSION):
-    return cement_get_version(version)
+class OutputNotDirectoryError(Error):
+    pass
+

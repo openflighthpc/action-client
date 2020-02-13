@@ -31,6 +31,11 @@ from ..core.version import get_version
 
 from jsonapi_client import ResourceTuple, Inclusion
 
+from action_app.exceptions import MissingNodesError
+from action_app.exceptions import OutputNotDirectoryError
+
+import os
+
 VERSION_BANNER = """
 Run a command on a node or over a group %s
 %s
@@ -55,6 +60,26 @@ class Base(Controller):
         ]
 
     def add_command(cmd):
+        def render_job(render, job, directory):
+            # Setup the top level rendering scope
+            data = { 'job': job,
+                     'node': job.node,
+                     'long_format': False if directory else True }
+
+            if directory:
+                if not os.path.exists(directory): os.mkdir(directory)
+                if not os.path.isdir(directory):
+                    raise OutputNotDirectoryError('{} is not a directory'.format(directory))
+                name = job.node.name
+                with open(os.path.join(directory, name + '.status'), 'w+') as f:
+                    f.write(str(job.status))
+                with open(os.path.join(directory, name + '.stdout'), 'w+') as f:
+                    f.write(job.stdout)
+                with open(os.path.join(directory, name + '.stderr'), 'w+') as f:
+                    f.write(job.stderr)
+
+            render(data, 'job.mustache')
+
         def runner(self):
             # Selects the type: nodes or groups
             type = 'groups' if self.app.pargs.group else 'nodes'
@@ -72,8 +97,15 @@ class Base(Controller):
             # Reassign the ticket from the response
             ticket = self.app.session.read(data).resource
 
-            # Render the jobs to the screen
-            for j in ticket.jobs: self.app.render(j, 'job.mustache')
+            # Error if no jobs where returned
+            if len(ticket.jobs) == 0:
+                if self.app.pargs.group:
+                    msg = 'Could not execute any jobs as the nodes do not exist'
+                else:
+                    msg = 'Could not execute the job as the node does not exist'
+                raise MissingNodesError(msg)
+
+            for j in ticket.jobs: render_job(self.app.render, j, self.app.pargs.output)
 
         runner.__name__ = cmd.id
         ex(
@@ -82,6 +114,8 @@ class Base(Controller):
             arguments = [
                 (['-g', '--group'], { 'action': 'store_true',
                     'help': "Run over the group given by 'name'" }),
+                (['-o', '--output'], { 'metavar': 'DIRECTORY',
+                    'help': "Save the results within this directory"}),
                 (['name'], dict(help='The name of the node (or group)'))
             ]
         )(runner)
